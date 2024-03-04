@@ -18,14 +18,22 @@ public class FlashlightController : MonoBehaviour
    
 
     [Header("Intensity and Angle Change")]
-    [SerializeField] private float raycastDistance = 10f;
-    [SerializeField] private float lowIntensity = 0.25f;
-    [SerializeField] private float highIntensity = 0.5f;
-    [SerializeField] private float targetIntensity = 0.5f;
-    [SerializeField] private float lowAngle = 35f;
-    [SerializeField] private float highAngle = 66.5f;
-    [SerializeField] private float targetAngle = 35f;
-    [SerializeField] private float intensityChangeSpeed = 10.0f; 
+    private float raycastDistance = 10f;
+    private float lowIntensity = 0.25f;
+    private float highIntensity = 0.5f;
+    private float targetIntensity = 0.5f;
+    private float lowAngle = 50f;
+    private float highAngle = 66.5f;
+    private float targetAngle = 50f;
+    private float lowRange = 35f;
+    private float highRange = 60f;
+    private float targetRange = 35f; 
+    private float intensityChangeSpeed = 10.0f;
+
+    [Header("Battery Components")]
+    public float maxBattery = 100f;
+    private float currentBattery; 
+    
 
     //public AudioClip turnOn;
     //public AudioClip turnOff;
@@ -39,6 +47,8 @@ public class FlashlightController : MonoBehaviour
         flashlight = flashlightObject.GetComponent<Light>(); 
         vectOffset = flashlightObject.transform.position - cameraFollow.transform.position; 
         flashlightObject.SetActive(false);
+
+        currentBattery = maxBattery; 
     }
 
     private void DetectObjectInFront()
@@ -48,12 +58,14 @@ public class FlashlightController : MonoBehaviour
         {
             targetIntensity = highIntensity;
             targetAngle = highAngle;
+            targetRange = lowRange;
             Debug.Log("Object detected in front: " + hit.collider.gameObject.name);
             Debug.DrawLine(transform.position, hit.point, Color.red);
         }
         else
         {
-            targetAngle = lowAngle; 
+            targetAngle = lowAngle;
+            targetRange = highRange; 
             targetIntensity = lowIntensity; 
             Debug.DrawLine(transform.position, transform.position + transform.forward * raycastDistance, Color.green);
         }
@@ -80,6 +92,7 @@ public class FlashlightController : MonoBehaviour
         flashlight.intensity = Mathf.Lerp(flashlight.intensity, targetIntensity, Time.deltaTime * intensityChangeSpeed);
         flashlight.innerSpotAngle = Mathf.Lerp(flashlight.innerSpotAngle, targetAngle, Time.deltaTime * intensityChangeSpeed);
         flashlight.shadowAngle = Mathf.Lerp(flashlight.shadowAngle, targetAngle, Time.deltaTime * 1.0f);
-        //flashlight.spotAngle = Mathf.Lerp(flashlight.spotAngle, targetAngle, Time.deltaTime * intensityChangeSpeed);
+        flashlight.spotAngle = Mathf.Lerp(flashlight.spotAngle, targetAngle, Time.deltaTime * 0.5f);
+        flashlight.range = Mathf.Lerp(flashlight.range, targetRange, Time.deltaTime * 1.0f);
     }
 }
