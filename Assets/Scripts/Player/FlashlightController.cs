@@ -15,11 +15,18 @@ public class FlashlightController : MonoBehaviour
     [SerializeField] private GameObject flashlightObject;
     [SerializeField] private Light flashlight;
     [SerializeField] private bool flashlightOn;
+   
+
+    [Header("Intensity and Angle Change")]
     [SerializeField] private float raycastDistance = 10f;
     [SerializeField] private float lowIntensity = 0.25f;
     [SerializeField] private float highIntensity = 0.5f;
-    [SerializeField] private float targetIntensity = 0.5f; 
-    [SerializeField] private float intensityChangeSpeed = 1.0f; 
+    [SerializeField] private float targetIntensity = 0.5f;
+    [SerializeField] private float lowAngle = 35f;
+    [SerializeField] private float highAngle = 66.5f;
+    [SerializeField] private float targetAngle = 35f;
+    [SerializeField] private float intensityChangeSpeed = 10.0f; 
+
     //public AudioClip turnOn;
     //public AudioClip turnOff;
     //public AudioManager asm; 
@@ -39,12 +46,14 @@ public class FlashlightController : MonoBehaviour
         RaycastHit hit;
         if (Physics.Raycast(transform.position, transform.forward, out hit, raycastDistance))
         {
-            targetIntensity = highIntensity; 
+            targetIntensity = highIntensity;
+            targetAngle = highAngle;
             Debug.Log("Object detected in front: " + hit.collider.gameObject.name);
             Debug.DrawLine(transform.position, hit.point, Color.red);
         }
         else
         {
+            targetAngle = lowAngle; 
             targetIntensity = lowIntensity; 
             Debug.DrawLine(transform.position, transform.position + transform.forward * raycastDistance, Color.green);
         }
@@ -69,5 +78,8 @@ public class FlashlightController : MonoBehaviour
 
         DetectObjectInFront(); 
         flashlight.intensity = Mathf.Lerp(flashlight.intensity, targetIntensity, Time.deltaTime * intensityChangeSpeed);
+        flashlight.innerSpotAngle = Mathf.Lerp(flashlight.innerSpotAngle, targetAngle, Time.deltaTime * intensityChangeSpeed);
+        flashlight.shadowAngle = Mathf.Lerp(flashlight.shadowAngle, targetAngle, Time.deltaTime * 1.0f);
+        //flashlight.spotAngle = Mathf.Lerp(flashlight.spotAngle, targetAngle, Time.deltaTime * intensityChangeSpeed);
     }
 }

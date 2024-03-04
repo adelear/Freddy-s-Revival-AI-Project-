@@ -249,6 +249,33 @@ Transform:
   - {fileID: 2044526793}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &253045232 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8798205878486120965, guid: b7eb99d5f4a2a2244b5d2b6dc1b61b8b, type: 3}
+  m_PrefabInstance: {fileID: 1234848221}
+  m_PrefabAsset: {fileID: 0}
+--- !u!64 &253045236
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 253045232}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -7757054454094250264, guid: b7eb99d5f4a2a2244b5d2b6dc1b61b8b, type: 3}
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -341,6 +368,33 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1249576875}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &968091531 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5980542124996813195, guid: b7eb99d5f4a2a2244b5d2b6dc1b61b8b, type: 3}
+  m_PrefabInstance: {fileID: 1234848221}
+  m_PrefabAsset: {fileID: 0}
+--- !u!64 &968091535
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 968091531}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -462981019419857548, guid: b7eb99d5f4a2a2244b5d2b6dc1b61b8b, type: 3}
 --- !u!1001 &1234848221
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -581,7 +635,13 @@ PrefabInstance:
     - {fileID: 220992811047631498, guid: b7eb99d5f4a2a2244b5d2b6dc1b61b8b, type: 3}
     - {fileID: -6994559979666847718, guid: b7eb99d5f4a2a2244b5d2b6dc1b61b8b, type: 3}
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 8798205878486120965, guid: b7eb99d5f4a2a2244b5d2b6dc1b61b8b, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 253045236}
+    - targetCorrespondingSourceObject: {fileID: 5980542124996813195, guid: b7eb99d5f4a2a2244b5d2b6dc1b61b8b, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 968091535}
   m_SourcePrefab: {fileID: 100100000, guid: b7eb99d5f4a2a2244b5d2b6dc1b61b8b, type: 3}
 --- !u!1 &1249576871
 GameObject:
@@ -718,7 +778,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1249576871}
   serializedVersion: 4
-  m_Mass: 1
+  m_Mass: 100
   m_Drag: 0
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -735,7 +795,7 @@ Rigidbody:
   m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 84
   m_CollisionDetection: 0
 --- !u!114 &1249576878
 MonoBehaviour:
@@ -755,11 +815,14 @@ MonoBehaviour:
   flashlightObject: {fileID: 53489316}
   flashlight: {fileID: 0}
   flashlightOn: 0
-  raycastDistance: 5
+  raycastDistance: 10
   lowIntensity: 0.25
   highIntensity: 0.5
   targetIntensity: 0.5
-  intensityChangeSpeed: 1
+  lowAngle: 35
+  highAngle: 66.5
+  targetAngle: 66.5
+  intensityChangeSpeed: 10
 --- !u!1 &1369506536
 GameObject:
   m_ObjectHideFlags: 0
@@ -1332,6 +1395,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1115131074886643007, guid: 4ce57384f5b8ed249996e384f673aff2, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2955231615874759599, guid: 4ce57384f5b8ed249996e384f673aff2, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4161800210407509546, guid: 4ce57384f5b8ed249996e384f673aff2, type: 3}
       propertyPath: gameMusic
       value: 
