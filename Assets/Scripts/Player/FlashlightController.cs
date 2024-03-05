@@ -58,7 +58,7 @@ public class FlashlightController : MonoBehaviour
             targetIntensity = highIntensity;
             targetAngle = highAngle;
             targetRange = lowRange;
-            Debug.Log("Object detected in front: " + hit.collider.gameObject.name);
+            //Debug.Log("Object detected in front: " + hit.collider.gameObject.name);
             Debug.DrawLine(transform.position, hit.point, Color.red);
         }
         else
@@ -71,37 +71,40 @@ public class FlashlightController : MonoBehaviour
     }
     private void Update()
     {
-        if (!flashlightOn && Input.GetMouseButtonDown(0) && GameManager.Instance.GetGameState()==GameManager.GameState.GAME)
+        if (GameManager.Instance.GetGameState() == GameManager.GameState.GAME)
         {
-            flashlightObject.SetActive(true);
-            //asm.PlayOneShot(turnOn, false); 
-            flashlightOn =true; 
-        }
-        else if (flashlightOn && Input.GetMouseButtonDown(0) && GameManager.Instance.GetGameState() == GameManager.GameState.GAME)
-        {
-            flashlightObject.SetActive(false);
-            //asm.PlayOneShot(turnOff, false);
-            flashlightOn =false;
-        }
+            if (!flashlightOn && Input.GetMouseButtonDown(0))
+            {
+                flashlightObject.SetActive(true);
+                //asm.PlayOneShot(turnOn, false); 
+                flashlightOn = true;
+            }
+            else if (flashlightOn && Input.GetMouseButtonDown(0))
+            {
+                flashlightObject.SetActive(false);
+                //asm.PlayOneShot(turnOff, false);
+                flashlightOn = false;
+            }
 
-        flashlightObject.transform.position = cameraFollow.transform.position + vectOffset;
-        flashlightObject.transform.rotation = Quaternion.Slerp(flashlightObject.transform.rotation, cameraFollow.transform.rotation, speed * Time.deltaTime);
+            flashlightObject.transform.position = cameraFollow.transform.position + vectOffset;
+            flashlightObject.transform.rotation = Quaternion.Slerp(flashlightObject.transform.rotation, cameraFollow.transform.rotation, speed * Time.deltaTime);
 
-        DetectObjectInFront(); 
-       
-        flashlight.innerSpotAngle = Mathf.Lerp(flashlight.innerSpotAngle, targetAngle, Time.deltaTime * intensityChangeSpeed);
-        flashlight.shadowAngle = Mathf.Lerp(flashlight.shadowAngle, targetAngle, Time.deltaTime * 1.0f);
-        flashlight.spotAngle = Mathf.Lerp(flashlight.spotAngle, targetAngle, Time.deltaTime * 0.5f);
-        flashlight.range = Mathf.Lerp(flashlight.range, targetRange, Time.deltaTime * 1.0f);
+            DetectObjectInFront();
 
-        if (Time.time % 10f < Time.deltaTime)
-        {
-            float randomIntensity = Random.Range(lowIntensity, highIntensity);
-            flashlight.intensity = randomIntensity;
-        }
-        else
-        {
-            flashlight.intensity = Mathf.Lerp(flashlight.intensity, targetIntensity, Time.deltaTime * intensityChangeSpeed);
+            flashlight.innerSpotAngle = Mathf.Lerp(flashlight.innerSpotAngle, targetAngle, Time.deltaTime * intensityChangeSpeed);
+            flashlight.shadowAngle = Mathf.Lerp(flashlight.shadowAngle, targetAngle, Time.deltaTime * 1.0f);
+            flashlight.spotAngle = Mathf.Lerp(flashlight.spotAngle, targetAngle, Time.deltaTime * 0.5f);
+            flashlight.range = Mathf.Lerp(flashlight.range, targetRange, Time.deltaTime * 1.0f);
+
+            if (Time.time % 10f < Time.deltaTime)
+            {
+                float randomIntensity = Random.Range(lowIntensity, highIntensity);
+                flashlight.intensity = randomIntensity;
+            }
+            else
+            {
+                flashlight.intensity = Mathf.Lerp(flashlight.intensity, targetIntensity, Time.deltaTime * intensityChangeSpeed);
+            }
         }
     }
 }

@@ -113,10 +113,12 @@ public class Player : MonoBehaviour
     {
         if (GameManager.Instance.GetGameState() == GameManager.GameState.GAME)
         {
+            Cursor.lockState = CursorLockMode.Locked;
             MovementAndLook();
             HandleStamina();
-            HandleCrouched();  
+            HandleCrouched();
         }
+        else Cursor.lockState = CursorLockMode.Confined; 
         //Debug.Log($"{currentStamina} / {maxStamina}");
     }
 }
