@@ -32,8 +32,7 @@ public class FlashlightController : MonoBehaviour
 
     [Header("Battery Components")]
     public float maxBattery = 100f;
-    private float currentBattery; 
-    
+    private float currentBattery;
 
     //public AudioClip turnOn;
     //public AudioClip turnOff;
@@ -89,10 +88,20 @@ public class FlashlightController : MonoBehaviour
         flashlightObject.transform.rotation = Quaternion.Slerp(flashlightObject.transform.rotation, cameraFollow.transform.rotation, speed * Time.deltaTime);
 
         DetectObjectInFront(); 
-        flashlight.intensity = Mathf.Lerp(flashlight.intensity, targetIntensity, Time.deltaTime * intensityChangeSpeed);
+       
         flashlight.innerSpotAngle = Mathf.Lerp(flashlight.innerSpotAngle, targetAngle, Time.deltaTime * intensityChangeSpeed);
         flashlight.shadowAngle = Mathf.Lerp(flashlight.shadowAngle, targetAngle, Time.deltaTime * 1.0f);
         flashlight.spotAngle = Mathf.Lerp(flashlight.spotAngle, targetAngle, Time.deltaTime * 0.5f);
         flashlight.range = Mathf.Lerp(flashlight.range, targetRange, Time.deltaTime * 1.0f);
+
+        if (Time.time % 10f < Time.deltaTime)
+        {
+            float randomIntensity = Random.Range(lowIntensity, highIntensity);
+            flashlight.intensity = randomIntensity;
+        }
+        else
+        {
+            flashlight.intensity = Mathf.Lerp(flashlight.intensity, targetIntensity, Time.deltaTime * intensityChangeSpeed);
+        }
     }
 }

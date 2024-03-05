@@ -25,7 +25,7 @@ public class Player : MonoBehaviour
 
     private bool isCrouched;
     private float regularHeight = 0.662f; 
-    private float crouchedHeight = -0.38f;
+    private float crouchedHeight = -0.8f;
 
     private void Start()
     {
@@ -99,12 +99,12 @@ public class Player : MonoBehaviour
         if (!isCrouched && Input.GetKeyDown(KeyCode.LeftControl))
         {
             isCrouched = true;
-            StartCoroutine(AdjustHeight(regularHeight, crouchedHeight, 0.25f)); 
+            StartCoroutine(AdjustHeight(regularHeight, crouchedHeight, 0.15f)); 
         }
         else if (isCrouched && Input.GetKeyDown(KeyCode.LeftControl))
         {
             isCrouched = false;
-            StartCoroutine(AdjustHeight(crouchedHeight, regularHeight, 0.25f)); 
+            StartCoroutine(AdjustHeight(crouchedHeight, regularHeight, 0.15f)); 
         }
     }
 
@@ -115,8 +115,8 @@ public class Player : MonoBehaviour
         {
             MovementAndLook();
             HandleStamina();
-            HandleCrouched(); 
+            HandleCrouched();  
         }
-        Debug.Log($"{currentStamina} / {maxStamina}");
+        //Debug.Log($"{currentStamina} / {maxStamina}");
     }
 }
