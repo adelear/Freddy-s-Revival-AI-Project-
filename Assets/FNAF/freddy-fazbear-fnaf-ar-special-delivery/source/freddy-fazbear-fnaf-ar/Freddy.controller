@@ -37,38 +37,38 @@ AnimatorStateMachine:
   m_ChildStates:
   - serializedVersion: 1
     m_State: {fileID: 1245981575572916845}
-    m_Position: {x: 20, y: 210, z: 0}
+    m_Position: {x: -250, y: 90, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -7392059845107195824}
-    m_Position: {x: 10, y: 280, z: 0}
+    m_Position: {x: -250, y: 230, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 3581029707848855242}
-    m_Position: {x: 10, y: 350, z: 0}
+    m_Position: {x: 330, y: 280, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -7162351465801998564}
-    m_Position: {x: 10, y: 420, z: 0}
+    m_Position: {x: 330, y: 140, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 7681284523748717629}
-    m_Position: {x: 300, y: 350, z: 0}
+    m_Position: {x: -250, y: 370, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 5043156009123554202}
-    m_Position: {x: 300, y: 270, z: 0}
+    m_Position: {x: 330, y: 210, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -3665944015384626099}
-    m_Position: {x: 290, y: 430, z: 0}
+    m_Position: {x: 330, y: 340, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 7568107299806491136}
-    m_Position: {x: 300, y: 200, z: 0}
+    m_Position: {x: -250, y: 300, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -3361253009051597927}
-    m_Position: {x: -230, y: 250, z: 0}
+    m_Position: {x: -250, y: 160, z: 0}
   m_ChildStateMachines: []
   m_AnyStateTransitions: []
   m_EntryTransitions: []
   m_StateMachineTransitions: {}
   m_StateMachineBehaviours: []
   m_AnyStatePosition: {x: 50, y: 20, z: 0}
-  m_EntryPosition: {x: 50, y: 120, z: 0}
+  m_EntryPosition: {x: 50, y: 90, z: 0}
   m_ExitPosition: {x: 800, y: 120, z: 0}
   m_ParentStateMachinePosition: {x: 800, y: 20, z: 0}
   m_DefaultState: {fileID: 1245981575572916845}
@@ -158,7 +158,13 @@ AnimatorController:
   m_PrefabAsset: {fileID: 0}
   m_Name: Freddy
   serializedVersion: 5
-  m_AnimatorParameters: []
+  m_AnimatorParameters:
+  - m_Name: Blend
+    m_Type: 1
+    m_DefaultFloat: 0
+    m_DefaultInt: 0
+    m_DefaultBool: 0
+    m_Controller: {fileID: 0}
   m_AnimatorLayers:
   - serializedVersion: 5
     m_Name: Base Layer
