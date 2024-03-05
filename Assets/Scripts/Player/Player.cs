@@ -12,20 +12,23 @@ public class Player : MonoBehaviour
     private Camera playerCamera;
     private Vector3 moveDirection = Vector3.zero;
 
+    [Header("Sprint Components")]
     public float maxStamina = 100f;
     public float currentStamina;
     public float sprintSpeed = 7.5f; 
     public float walkSpeed = 5f;
     public float exhaustionDuration = 3f;
 
-    private bool isExhausted = false;
+    public bool isExhausted = false;
     private float staminaDepletioRate = 10f;
     private float staminaRechargeRate = 10f;
 
 
     private bool isCrouched;
-    private float regularHeight = 0.662f; 
-    private float crouchedHeight = -0.8f;
+    public float regularHeight = 1.6f;
+    public float crouchedHeight = 0f;
+
+    public bool isHidden; 
 
     private void Start()
     {

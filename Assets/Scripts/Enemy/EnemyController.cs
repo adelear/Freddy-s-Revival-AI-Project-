@@ -9,7 +9,7 @@ public class EnemyController : MonoBehaviour
     [Header("General Components")]
     [SerializeField] private float walkSpeed = 1.0f;
     [SerializeField] private float sprintSpeed = 10.0f;
-
+    [SerializeField] private Player playerController; 
     private bool isIdle = false; 
     private int currentPatrolIndex = 0;
     private NavMeshAgent agent; 
@@ -74,6 +74,7 @@ public class EnemyController : MonoBehaviour
         agent = GetComponent<NavMeshAgent>();
         agent.speed = walkSpeed;
         player = GameObject.FindGameObjectWithTag("Player").transform;
+        playerController = player.gameObject.GetComponent<Player>(); 
         CurrentState = EnemyStates.Patrol;
         jumpscareLight.SetActive(false); 
 
@@ -121,7 +122,7 @@ public class EnemyController : MonoBehaviour
     private void JumpScare()
     {
         Debug.Log("Jumpscare"); 
-        agent.ResetPath(); 
+        //agent.ResetPath(); 
         agent.enabled = false;
         jumpscareCam.depth = 1f;
         jumpscareLight.SetActive(true);
@@ -140,9 +141,12 @@ public class EnemyController : MonoBehaviour
 
     void ChasePlayer()
     {
-        agent.SetDestination(player.position);
-        agent.speed = sprintSpeed;
-        if (DistanceToPlayer() > detectedRange) CurrentState = EnemyStates.Patrol;
+        if (!playerController.isHidden)
+        {
+            agent.SetDestination(player.position);
+            agent.speed = sprintSpeed;
+            if (DistanceToPlayer() > detectedRange) CurrentState = EnemyStates.Patrol;
+        }
     }
 
     private void HandleStates()
@@ -186,9 +190,9 @@ public class EnemyController : MonoBehaviour
         if (GameManager.Instance.GetGameState() == GameManager.GameState.GAME)
         {
             HandleStates();
-            if (DistanceToPlayer() <= detectedRange && !isIdle && CurrentState == EnemyStates.Patrol) CurrentState = EnemyStates.FoundPlayer; 
+            if (DistanceToPlayer() <= detectedRange && !isIdle && CurrentState == EnemyStates.Patrol && !playerController.isHidden) CurrentState = EnemyStates.FoundPlayer; 
             if (DistanceToPlayer() <= attackRange && CurrentState == EnemyStates.Chase) CurrentState = EnemyStates.Jumpscare;
-            if (DistanceToPlayer() > detectedRange && CurrentState == EnemyStates.Chase) CurrentState = EnemyStates.Idle;
+            if (DistanceToPlayer() > detectedRange && CurrentState == EnemyStates.Chase || playerController.isHidden && CurrentState == EnemyStates.Chase) CurrentState = EnemyStates.Idle;
             if (CurrentState == EnemyStates.Chase && DistanceToPlayer() > attackRange && agent.velocity == Vector3.zero) agent.SetDestination(player.position);
         }
     }
