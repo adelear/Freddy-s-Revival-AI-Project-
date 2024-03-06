@@ -10,7 +10,6 @@ public class EnemyController : MonoBehaviour
     [SerializeField] private float walkSpeed = 1.0f;
     [SerializeField] private float sprintSpeed = 10.0f;
     [SerializeField] private Player playerController; 
-    private bool isIdle = false; 
     private int currentPatrolIndex = 0;
     private NavMeshAgent agent; 
     public event System.Action<EnemyStates> OnStateChanged;
@@ -24,6 +23,7 @@ public class EnemyController : MonoBehaviour
     private string chargeAnim;
     private string foundPlayerAnim;
     private string jumpscareAnim;
+    private string stunAnim; 
 
     //Attack Components
     [SerializeField] float attackRange;
@@ -32,7 +32,10 @@ public class EnemyController : MonoBehaviour
 
     [Header("Jumpscare Components")]
     [SerializeField] Camera jumpscareCam;
-    [SerializeField] GameObject jumpscareLight; 
+    [SerializeField] GameObject jumpscareLight;
+
+    private bool isIdle = false;
+    private bool isStunned = false; 
 
     private EnemyStates currentState = EnemyStates.Patrol; 
     public EnemyStates CurrentState
@@ -63,6 +66,9 @@ public class EnemyController : MonoBehaviour
                 case EnemyStates.FoundPlayer:
                     StartCoroutine(FoundPlayer());
                     break;
+                case EnemyStates.Stun:
+                    StartCoroutine(StunEnemy()); 
+                    break; 
                 default:
                     break;
             }
@@ -86,6 +92,7 @@ public class EnemyController : MonoBehaviour
                 chargeAnim = "Freddy--Charge";
                 foundPlayerAnim = "Freddy--CPU_Revive";
                 jumpscareAnim = "Freddy--Jumpscare";
+                stunAnim = "Freddy--Shocked"; 
 
                 attackRange = 5f;
 
@@ -98,6 +105,7 @@ public class EnemyController : MonoBehaviour
                 chargeAnim = "Bonnie--Charge";
                 foundPlayerAnim = "Bonnie--Idle";
                 jumpscareAnim = "bonnie_jumpscare";
+                stunAnim = "bonnie_stunned"; 
 
                 attackRange = 4f;
 
@@ -185,9 +193,23 @@ public class EnemyController : MonoBehaviour
         CurrentState = EnemyStates.Patrol;
     }
 
+    IEnumerator StunEnemy()
+    {
+        isStunned = true;
+        agent.enabled = false;
+        anim.Play(stunAnim); 
+
+        yield return new WaitForSeconds(10f);
+
+        isStunned = false; 
+        agent.enabled = true;
+        CurrentState = EnemyStates.Idle;
+    }
+
     void Update()
     {
-        if (GameManager.Instance.GetGameState() == GameManager.GameState.GAME)
+        if (Input.GetKeyDown(KeyCode.T)) CurrentState = EnemyStates.Stun; // Testing
+        if (GameManager.Instance.GetGameState() == GameManager.GameState.GAME && !isStunned)
         {
             HandleStates();
             if (DistanceToPlayer() <= detectedRange && !isIdle && CurrentState == EnemyStates.Patrol && !playerController.isHidden) CurrentState = EnemyStates.FoundPlayer; 

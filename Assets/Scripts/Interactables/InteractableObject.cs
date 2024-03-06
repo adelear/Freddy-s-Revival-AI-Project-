@@ -6,18 +6,13 @@ using UnityEngine;
 
 public class InteractableObject : MonoBehaviour, IInteractable
 {
+    [Header("General Components")]
     public string Name;
     public bool isPickup; 
-    private float interactDistance = 4f;
-    private bool isInteracting = false; 
+    private float interactDistance = 5f;
+    private bool isInteracting = false;
     private TMP_Text interactText;
-
-    private InteractableType interactableType;
-    public InteractableType InteractableType
-    {
-        get { return interactableType; }
-        set { interactableType = value; }
-    }
+    public InteractableType interactableType;
 
     protected void Start() 
     { 
@@ -28,14 +23,20 @@ public class InteractableObject : MonoBehaviour, IInteractable
     // When player presses interact, this gets called
     public virtual void Interact()
     {
-        isInteracting = true; 
+        StartCoroutine(InteractDone()); 
+    }
+
+    IEnumerator InteractDone()
+    {
+        isInteracting = true;
         switch (interactableType)
         {
             case InteractableType.FakeExit:
                 interactText.text = "What kind of emergency exit is locked on the inside...";
+                Debug.Log("Interacting with fake exit");
                 break;
             case InteractableType.RealExit:
-                Debug.Log("Interacting");
+                interactText.text = "I can't leave without the music box...";
                 break;
             case InteractableType.Key:
                 Debug.Log("Interacting");
@@ -47,9 +48,13 @@ public class InteractableObject : MonoBehaviour, IInteractable
                 Debug.Log("Interacting");
                 break;
             default:
-                Debug.Log("Interacting"); 
+                Debug.Log("Interacting");
                 break;
         }
+
+        yield return new WaitForSeconds(6.0f);
+        interactText.text = "";
+        isInteracting = false;
     }
 
     // Calling the lines such as "Interact with Exit Door, Key, etc"
@@ -61,8 +66,7 @@ public class InteractableObject : MonoBehaviour, IInteractable
     // Looking away clears the line 
     public virtual void LookAway()
     {
-        interactText.text = "";
-        isInteracting = false; 
+        if (!isInteracting) interactText.text = "";
     }
 
     public virtual void Update()
@@ -76,7 +80,6 @@ public class InteractableObject : MonoBehaviour, IInteractable
                 LookAt();
                 if (Input.GetKeyDown(KeyCode.E)) Interact();
             }
-            else LookAway();
         }
         else LookAway(); 
     }
