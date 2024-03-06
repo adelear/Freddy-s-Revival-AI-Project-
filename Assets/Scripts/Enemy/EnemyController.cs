@@ -23,11 +23,15 @@ public class EnemyController : MonoBehaviour
     private string chargeAnim;
     private string foundPlayerAnim;
     private string jumpscareAnim;
-    private string stunAnim; 
+    private string stunAnim;
+    private string deadAnim;
 
     //Attack Components
-    [SerializeField] float attackRange;
-    private float detectedRange = 15.0f; 
+    [Header("Attack Components")]
+    [SerializeField] private float attackRange;
+    [SerializeField] private float detectedRange = 15.0f;
+    [SerializeField] private int stunsNeededToDie;
+    [SerializeField] private int currentStuns = 0;
     private Transform player;
 
     [Header("Jumpscare Components")]
@@ -35,7 +39,8 @@ public class EnemyController : MonoBehaviour
     [SerializeField] GameObject jumpscareLight;
 
     private bool isIdle = false;
-    private bool isStunned = false; 
+    private bool isStunned = false;
+    private bool isDead = false; 
 
     private EnemyStates currentState = EnemyStates.Patrol; 
     public EnemyStates CurrentState
@@ -68,6 +73,9 @@ public class EnemyController : MonoBehaviour
                     break;
                 case EnemyStates.Stun:
                     StartCoroutine(StunEnemy()); 
+                    break;
+                case EnemyStates.Shutdown:
+                    Dead(); 
                     break; 
                 default:
                     break;
@@ -92,7 +100,8 @@ public class EnemyController : MonoBehaviour
                 chargeAnim = "Freddy--Charge";
                 foundPlayerAnim = "Freddy--CPU_Revive";
                 jumpscareAnim = "Freddy--Jumpscare";
-                stunAnim = "Freddy--Shocked"; 
+                stunAnim = "Freddy--Shocked";
+                deadAnim = "Freddy--Shutdown"; 
 
                 attackRange = 5f;
 
@@ -105,7 +114,8 @@ public class EnemyController : MonoBehaviour
                 chargeAnim = "Bonnie--Charge";
                 foundPlayerAnim = "Bonnie--Idle";
                 jumpscareAnim = "bonnie_jumpscare";
-                stunAnim = "bonnie_stunned"; 
+                stunAnim = "bonnie_stunned";
+                deadAnim = "Bonnie--Shutdown"; 
 
                 attackRange = 4f;
 
@@ -196,18 +206,31 @@ public class EnemyController : MonoBehaviour
     IEnumerator StunEnemy()
     {
         isStunned = true;
+        currentStuns++; 
         agent.enabled = false;
         anim.Play(stunAnim); 
 
-        yield return new WaitForSeconds(10f);
+        yield return new WaitForSeconds(5f);
 
-        isStunned = false; 
-        agent.enabled = true;
-        CurrentState = EnemyStates.Idle;
+        if (currentStuns >= stunsNeededToDie) CurrentState = EnemyStates.Shutdown; 
+        else
+        {
+            isStunned = false;
+            agent.enabled = true;
+            CurrentState = EnemyStates.Idle;
+        }
+    }
+
+    private void Dead()
+    {
+        isDead = true;
+        agent.enabled = false;
+        anim.Play(deadAnim); 
     }
 
     void Update()
     {
+        if (isDead) return; // :(  
         if (Input.GetKeyDown(KeyCode.T)) CurrentState = EnemyStates.Stun; // Testing
         if (GameManager.Instance.GetGameState() == GameManager.GameState.GAME && !isStunned)
         {
