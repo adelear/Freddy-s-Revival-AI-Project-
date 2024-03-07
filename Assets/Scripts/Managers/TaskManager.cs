@@ -67,6 +67,17 @@ public class TaskManager : MonoBehaviour
                 taskTexts[i].text = "<s>" + tasks[i].description + "</s>";
             else
                 taskTexts[i].text = tasks[i].description;
+
+            if (tasks[i].type == TaskType.FindStunGun && tasks[i].isCompleted) transform.Find("StunGunUI").gameObject.SetActive(true); 
         }
+    }
+
+    public bool AreAllTasksDone()
+    {
+        for (int i = 0; i < tasks.Length ; i++)
+        {
+            if (!tasks[i].isCompleted) return false;    
+        }
+        return true; 
     }
 }

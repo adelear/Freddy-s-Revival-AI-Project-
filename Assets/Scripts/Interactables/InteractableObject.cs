@@ -32,11 +32,12 @@ public class InteractableObject : MonoBehaviour, IInteractable
         switch (interactableType)
         {
             case InteractableType.FakeExit:
-                interactText.text = "What kind of emergency exit is locked on the inside...";
+                interactText.text = "It's unlocked but something's blocking the other side... Better find the other exit.";
                 Debug.Log("Interacting with fake exit");
                 break;
             case InteractableType.RealExit:
-                interactText.text = "I can't leave without the music box...";
+                if (TaskManager.Instance.AreAllTasksDone()) GameManager.Instance.SwitchState(GameManager.GameState.WIN);
+                else interactText.text = "I need to finish my tasks before I leave...";
                 break;
             case InteractableType.Cupcake:
                 TaskManager.Instance.CompleteTask(TaskManager.TaskType.CollectCupcake);
