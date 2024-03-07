@@ -38,14 +38,15 @@ public class InteractableObject : MonoBehaviour, IInteractable
             case InteractableType.RealExit:
                 interactText.text = "I can't leave without the music box...";
                 break;
-            case InteractableType.Key:
-                Debug.Log("Interacting");
-                break;
-            case InteractableType.Mask:
-                Debug.Log("Interacting");
+            case InteractableType.Cupcake:
+                GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
+                // Change boolean value in a level manager to true 
+                Destroy(gameObject); 
                 break;
             case InteractableType.StunGun:
                 Debug.Log("Interacting");
+                Camera.main.transform.Find("StunGun").gameObject.SetActive(true);
+                Destroy(gameObject); 
                 break;
             default:
                 Debug.Log("Interacting");

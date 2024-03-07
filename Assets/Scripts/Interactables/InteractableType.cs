@@ -4,5 +4,5 @@ using UnityEngine;
 
 public enum InteractableType 
 {
-    FakeExit, RealExit, Key, StunGun, Mask
+    FakeExit, RealExit, Key, StunGun, Cupcake
 }

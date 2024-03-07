@@ -14,6 +14,7 @@ public class EnemyController : MonoBehaviour
     private NavMeshAgent agent; 
     public event System.Action<EnemyStates> OnStateChanged;
     public List<Transform> patrolPoints;
+    public bool staysIdleUntilShock; 
 
     [Header("Animation Components")]
     public Enemy enemyType;   
@@ -38,11 +39,11 @@ public class EnemyController : MonoBehaviour
     [SerializeField] Camera jumpscareCam;
     [SerializeField] GameObject jumpscareLight;
 
-    private bool isIdle = false;
-    private bool isStunned = false;
-    private bool isDead = false; 
+    public bool isIdle;
+    public bool isStunned = false;
+    public bool isDead = false; 
 
-    private EnemyStates currentState = EnemyStates.Patrol; 
+    private EnemyStates currentState = EnemyStates.Idle; 
     public EnemyStates CurrentState
     {
         get => currentState;
@@ -52,7 +53,7 @@ public class EnemyController : MonoBehaviour
             if (currentState == value) return;
             currentState = value;
             OnStateChanged?.Invoke(currentState);
-            Debug.Log($"Change to state {currentState}"); 
+            //Debug.Log($"Change to state {currentState}"); 
             switch (currentState)
             {
                 case EnemyStates.Idle:
@@ -89,7 +90,8 @@ public class EnemyController : MonoBehaviour
         agent.speed = walkSpeed;
         player = GameObject.FindGameObjectWithTag("Player").transform;
         playerController = player.gameObject.GetComponent<Player>(); 
-        CurrentState = EnemyStates.Patrol;
+        CurrentState = EnemyStates.Idle;
+        StartCoroutine(Idle()); 
         jumpscareLight.SetActive(false); 
 
         switch (enemyType)
@@ -104,9 +106,22 @@ public class EnemyController : MonoBehaviour
                 deadAnim = "Freddy--Shutdown"; 
 
                 attackRange = 5f;
-
+                staysIdleUntilShock = false;
+                isIdle = false; 
                 break;
+
             case Enemy.Chica:
+                idleAnim = "Chica--Idle";
+                walkAnim = "Chica--Walk";
+                chargeAnim = "Chica--Charge";
+                foundPlayerAnim = "Chicae--Idle";
+                jumpscareAnim = "Chica--Jumpscare";
+                stunAnim = "Chica--Shocked";
+                deadAnim = "Chica--Shutdown";
+
+                attackRange = 4f;
+                staysIdleUntilShock = true;
+                isIdle = true;
                 break;
             case Enemy.Bonnie:
                 idleAnim = "Bonnie--Idle";
@@ -118,9 +133,8 @@ public class EnemyController : MonoBehaviour
                 deadAnim = "Bonnie--Shutdown"; 
 
                 attackRange = 4f;
-
-                break;
-            case Enemy.Foxy:
+                staysIdleUntilShock = true;
+                isIdle = true; 
                 break;
             default:
                 break; 
@@ -139,7 +153,7 @@ public class EnemyController : MonoBehaviour
 
     private void JumpScare()
     {
-        Debug.Log("Jumpscare"); 
+        //Debug.Log("Jumpscare"); 
         //agent.ResetPath(); 
         agent.enabled = false;
         jumpscareCam.depth = 1f;
@@ -154,6 +168,8 @@ public class EnemyController : MonoBehaviour
 
     void Patrol()
     {
+        //Debug.Log("Patrolling");
+        agent.enabled = true; 
         agent.SetDestination(patrolPoints[currentPatrolIndex].position);
     }
 
@@ -191,17 +207,24 @@ public class EnemyController : MonoBehaviour
 
     IEnumerator Idle()
     {
-        isIdle = true; 
-        agent.ResetPath();
+        isIdle = true;
         agent.enabled = false;
-        anim.Play(idleAnim); 
+        anim.Play(idleAnim);
 
+        if (staysIdleUntilShock) 
+        {
+            while (!isStunned)
+            { 
+                yield return null;
+            } 
+        }
+
+        //Debug.Log("Done staying idle"); 
         yield return new WaitForSeconds(3f); 
-
         isIdle = false;
-        agent.enabled= true;
         CurrentState = EnemyStates.Patrol;
     }
+
 
     IEnumerator StunEnemy()
     {
@@ -209,6 +232,9 @@ public class EnemyController : MonoBehaviour
         currentStuns++; 
         agent.enabled = false;
         anim.Play(stunAnim); 
+        staysIdleUntilShock = false; 
+
+        agent.velocity = Vector3.zero; 
 
         yield return new WaitForSeconds(5f);
 
@@ -216,7 +242,6 @@ public class EnemyController : MonoBehaviour
         else
         {
             isStunned = false;
-            agent.enabled = true;
             CurrentState = EnemyStates.Idle;
         }
     }
@@ -230,7 +255,9 @@ public class EnemyController : MonoBehaviour
 
     void Update()
     {
+        AnimatorClipInfo[] curPlayingClips = anim.GetCurrentAnimatorClipInfo(0); 
         if (isDead) return; // :(  
+        if (curPlayingClips[0].clip.name == stunAnim) agent.enabled = false; 
         if (Input.GetKeyDown(KeyCode.T)) CurrentState = EnemyStates.Stun; // Testing
         if (GameManager.Instance.GetGameState() == GameManager.GameState.GAME && !isStunned)
         {
