@@ -86,12 +86,6 @@ public class CanvasManager : MonoBehaviour
             sfxSlider.onValueChanged.AddListener((value) => OnSliderValueChanged(value, "SFXVol")); 
         }
 
-        if (scoreText) 
-        {
-            GameManager.Instance.OnScoreValueChanged.AddListener((value) => UpdateScoreText(value));
-            scoreText.text = "Score: " + GameManager.Instance.Score.ToString();
-        }
-
         if (resumeGame)
         {
             EventTrigger resumeGameTrigger = resumeGame.gameObject.AddComponent<EventTrigger>();
@@ -109,18 +103,13 @@ public class CanvasManager : MonoBehaviour
 
     void LoadTitle()
     {
-        SceneManager.LoadScene("MainMenu");
+        SceneTransitionManager.Instance.LoadScene("MainMenu");
     }
     void UnpauseGame()
     {
         Time.timeScale = 1.0f;
         GameManager.Instance.SwitchState(GameManager.GameState.GAME);
         pauseMenu.SetActive(false);
-    }
-
-    void UpdateScoreText(int value)
-    {
-        scoreText.text = "Score: " + value.ToString();
     }
 
     void Update()
@@ -184,7 +173,7 @@ public class CanvasManager : MonoBehaviour
     }
     void StartGame()
     {
-        SceneManager.LoadScene("Level"); ;
+        SceneTransitionManager.Instance.LoadScene("Level"); ;
         Time.timeScale = 1.0f;
         if (audioSource != null)
         {

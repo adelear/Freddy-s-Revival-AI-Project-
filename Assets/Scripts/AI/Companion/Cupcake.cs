@@ -10,7 +10,7 @@ public class Cupcake : MonoBehaviour
     public List<Transform> targetPoints; 
     private int currentTarget = 0;
     private float MinDistanceToRun = 15f;
-    private float MinDistanceToIdle = 3f; 
+    private float MinDistanceToIdle = 5f; 
     NavMeshAgent agent;
     Animator anim;
 
@@ -59,7 +59,7 @@ public class Cupcake : MonoBehaviour
     void RunToNextPoint()
     {
         Debug.Log("Cupcake is running to the next point");
-        anim.Play("JumpWalk");
+        anim.SetBool("isIdle",false);
         agent.enabled = true;
         agent.SetDestination(targetPoints[currentTarget].position);
     }
@@ -68,7 +68,7 @@ public class Cupcake : MonoBehaviour
     void Idle()
     {
         Debug.Log("Cupcake is Idling");
-        anim.Play("Idle"); 
+        anim.SetBool("isIdle", true);
         agent.enabled = false;
     }
     void Update()

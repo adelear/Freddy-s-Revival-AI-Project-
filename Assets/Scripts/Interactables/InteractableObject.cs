@@ -39,12 +39,11 @@ public class InteractableObject : MonoBehaviour, IInteractable
                 interactText.text = "I can't leave without the music box...";
                 break;
             case InteractableType.Cupcake:
-                GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
-                // Change boolean value in a level manager to true 
+                TaskManager.Instance.CompleteTask(TaskManager.TaskType.CollectCupcake);
                 Destroy(gameObject); 
                 break;
             case InteractableType.StunGun:
-                Debug.Log("Interacting");
+                TaskManager.Instance.CompleteTask(TaskManager.TaskType.FindStunGun);
                 Camera.main.transform.Find("StunGun").gameObject.SetActive(true);
                 Destroy(gameObject); 
                 break;

@@ -248,6 +248,7 @@ public class EnemyController : MonoBehaviour
 
     private void Dead()
     {
+        if (enemyType == Enemy.Freddy) TaskManager.Instance.CompleteTask(TaskManager.TaskType.ImmobilizeFreddy); 
         isDead = true;
         agent.enabled = false;
         anim.Play(deadAnim); 

@@ -18,17 +18,16 @@ public class Player : MonoBehaviour
     public float sprintSpeed = 7.5f; 
     public float walkSpeed = 5f;
     public float exhaustionDuration = 3f;
-
     public bool isExhausted = false;
     private float staminaDepletioRate = 10f;
     private float staminaRechargeRate = 10f;
-
-
+    
+    [Header("Crouch Components")]
     private bool isCrouched;
     public float regularHeight = 1.6f;
     public float crouchedHeight = 0f;
 
-    public bool isHidden; 
+    public bool isHidden;  
 
     private void Start()
     {

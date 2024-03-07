@@ -7,7 +7,6 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    [SerializeField] GameObject HealthImg;
     [SerializeField] AudioManager asm; 
     [SerializeField] AudioClip LossSound;
     public static GameManager Instance { get; private set; }
@@ -18,7 +17,34 @@ public class GameManager : MonoBehaviour
         DEFEAT,
         WIN
     }
-    [SerializeField] private GameState currentState; 
+
+    [SerializeField] private GameState currentState;
+    public event System.Action<GameState> OnStateChanged; 
+    public GameState CurrentState
+    {
+        get => currentState;
+        set
+        {
+            if (currentState == value) return;
+            currentState = value;
+            OnStateChanged?.Invoke(currentState); 
+
+            switch (currentState)
+            {
+                case GameState.GAME:
+                    break;
+                case GameState.PAUSE:
+                    break; 
+                case GameState.DEFEAT:
+                    StartCoroutine(DelayedGameOver(6)); 
+                    break; 
+                case GameState.WIN:
+                    break;
+                default:
+                    break; 
+            }
+        }
+    }
 
     public event Action OnGameStateChanged;
 
@@ -31,54 +57,6 @@ public class GameManager : MonoBehaviour
             Destroy(gameObject);
     }
 
-    public int Score
-    {
-        get => score;
-        set
-        {
-            score = value;
-
-            if (OnScoreValueChanged != null)
-                OnScoreValueChanged.Invoke(score); 
-        }
-    }
-    private int score = 0;
-    public UnityEvent<int> OnScoreValueChanged;
-
-    public int Lives
-    {
-        get => lives;
-        set
-        {
-            lives = value;
-
-            if (lives > maxLives) lives = maxLives;
-
-            Debug.Log("Lives value has changed to " + lives.ToString());
-            if (lives < 0)
-                StartCoroutine(DelayedGameOver(0.5f)); 
-
-            DecreaseHealthBar(); 
-
-            if (OnLifeValueChanged != null)
-                OnLifeValueChanged.Invoke(lives);
-        }
-    }
-
-    public UnityEvent<int> OnLifeValueChanged;
-
-    private int lives = 3;
-    public int maxLives = 3;
-
-    public void DecreaseHealthBar()
-    {
-        if (HealthImg != null)
-        {
-            RectTransform healthRectTransform = HealthImg.GetComponent<RectTransform>();
-            healthRectTransform.sizeDelta -= new Vector2(10f, 0f); 
-        }
-    }
-
     IEnumerator DelayedGameOver(float delay)
     {
         yield return new WaitForSeconds(delay);
@@ -87,17 +65,19 @@ public class GameManager : MonoBehaviour
 
     void GameOver()
     {
-        SwitchState(GameState.DEFEAT); 
-        SceneManager.LoadScene("GameOver");
-        asm.PlayOneShot(LossSound, false);  
+        // Bring up Gameover UI 
+        //asm.PlayOneShot(LossSound, false);  
+    }
 
-        if (SceneManager.GetActiveScene().name == "GameOver")
-            if (Input.GetKeyDown(KeyCode.Escape))
-            {
-                SceneManager.LoadScene("MainMenu");
-                Lives = 3;
-                Score = 3;
-            }
+    void Win()
+    {
+        //Bring up Win UI
+    }
+
+    IEnumerator DelayedWin(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        Win(); 
     }
 
     public GameState GetGameState()

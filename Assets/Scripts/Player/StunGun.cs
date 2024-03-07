@@ -4,6 +4,7 @@ using UnityEngine;
 public class StunGun : MonoBehaviour
 {
     EnemyController enemyController;
+
     float hitDistance = 7f;
     bool canStun = true; 
     void StunEnemy()
