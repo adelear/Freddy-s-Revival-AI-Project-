@@ -110,10 +110,12 @@ public class CanvasManager : MonoBehaviour
         Time.timeScale = 1.0f;
         GameManager.Instance.SwitchState(GameManager.GameState.GAME);
         pauseMenu.SetActive(false);
+        Cursor.lockState = CursorLockMode.Locked;
     }
 
     void Update()
     {
+        if (GameManager.Instance.GetGameState() != GameManager.GameState.GAME) return; 
         if (!pauseMenu) return;
 
         if (Input.GetKeyDown(KeyCode.Escape))
@@ -195,7 +197,7 @@ public class CanvasManager : MonoBehaviour
     private void AddPointerEnterEvent(EventTrigger trigger, UnityEngine.Events.UnityAction action)
     {
         EventTrigger.Entry entry = new EventTrigger.Entry();
-        entry.eventID = EventTriggerType.PointerEnter;
+        entry.eventID = EventTriggerType.PointerClick; // change to pointerenter for hoverrr soundd, kinda annoying tho
         entry.callback.AddListener((eventData) => action.Invoke());
         trigger.triggers.Add(entry);
     } 

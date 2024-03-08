@@ -9,6 +9,9 @@ public class GameManager : MonoBehaviour
 {
     [SerializeField] AudioManager asm; 
     [SerializeField] AudioClip LossSound;
+    [SerializeField] AudioClip WinSound;
+    [SerializeField] GameObject winPage;
+    [SerializeField] GameObject lossPage; 
     public static GameManager Instance { get; private set; }
     public enum GameState
     {
@@ -36,9 +39,10 @@ public class GameManager : MonoBehaviour
                 case GameState.PAUSE:
                     break; 
                 case GameState.DEFEAT:
-                    StartCoroutine(DelayedGameOver(6)); 
+                    StartCoroutine(DelayedGameOver(2f)); 
                     break; 
                 case GameState.WIN:
+                    StartCoroutine(DelayedWin(1f)); 
                     break;
                 default:
                     break; 
@@ -57,7 +61,7 @@ public class GameManager : MonoBehaviour
             Destroy(gameObject);
     }
 
-    IEnumerator DelayedGameOver(float delay)
+    public IEnumerator DelayedGameOver(float delay)
     {
         yield return new WaitForSeconds(delay);
         GameOver();
@@ -65,17 +69,18 @@ public class GameManager : MonoBehaviour
 
     void GameOver()
     {
-        // Bring up Gameover UI 
-        //asm.PlayOneShot(LossSound, false);  
+        lossPage.SetActive(true);
+        AudioManager.Instance.PlayOneShot(LossSound, false);
     }
 
     void Win()
     {
-        //Bring up Win UI
+        winPage.SetActive(true);
     }
 
-    IEnumerator DelayedWin(float delay)
+    public IEnumerator DelayedWin(float delay)
     {
+        AudioManager.Instance.PlayOneShot(WinSound, false); 
         yield return new WaitForSeconds(delay);
         Win(); 
     }
@@ -88,8 +93,8 @@ public class GameManager : MonoBehaviour
     public void SwitchState(GameState newState)
     {
         Debug.Log("New state has been set to " + newState); 
-        currentState = newState;
-        OnGameStateChanged?.Invoke(); 
+        CurrentState = newState; 
+        //OnGameStateChanged?.Invoke(); 
     }
 }
 

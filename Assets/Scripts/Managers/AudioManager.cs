@@ -5,11 +5,19 @@ using UnityEngine.Audio;
 
 public class AudioManager : MonoBehaviour
 {
+    public static AudioManager Instance { get; private set; }
     List<AudioSource> currentAudioSources = new List<AudioSource>();
     public AudioMixerGroup sfxGroup;
     public AudioMixerGroup musicGroup;
 
-    // Start is called before the first frame update
+    private void Awake()
+    {
+        if (Instance == null)
+            Instance = this;
+        else
+            Destroy(gameObject);
+    }
+
     void Start()
     {
         currentAudioSources.Add(GetComponent<AudioSource>());

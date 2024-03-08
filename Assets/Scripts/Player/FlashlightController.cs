@@ -34,12 +34,12 @@ public class FlashlightController : MonoBehaviour
     public float maxBattery = 100f;
     private float currentBattery;
 
-    //public AudioClip turnOn;
-    //public AudioClip turnOff;
-    //public AudioManager asm; 
+    public AudioClip turnOn;
+    private AudioSource audioSource; 
 
     void Start()
     {
+        audioSource = GetComponent<AudioSource>();   
         cameraFollow = Camera.main.gameObject; 
         flashlightOn = false;
         flashlightObject = transform.Find("Flashlight").gameObject;
@@ -69,6 +69,17 @@ public class FlashlightController : MonoBehaviour
             Debug.DrawLine(transform.position, transform.position + transform.forward * raycastDistance, Color.green);
         }
     }
+
+    private void PlaySound()
+    {
+        if (audioSource != null)
+        {
+            audioSource.clip = turnOn;
+            audioSource.pitch = Random.Range(0.8f, 1.2f);
+            AudioManager.Instance.PlayOneShot(turnOn, false); 
+        }
+    }
+
     private void Update()
     {
         if (GameManager.Instance.GetGameState() == GameManager.GameState.GAME)
@@ -76,13 +87,13 @@ public class FlashlightController : MonoBehaviour
             if (!flashlightOn && Input.GetMouseButtonDown(0))
             {
                 flashlightObject.SetActive(true);
-                //asm.PlayOneShot(turnOn, false); 
+                PlaySound(); 
                 flashlightOn = true;
             }
             else if (flashlightOn && Input.GetMouseButtonDown(0))
             {
                 flashlightObject.SetActive(false);
-                //asm.PlayOneShot(turnOff, false);
+                PlaySound(); 
                 flashlightOn = false;
             }
 

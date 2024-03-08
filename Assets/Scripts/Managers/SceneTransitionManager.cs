@@ -60,7 +60,7 @@ public class SceneTransitionManager : MonoBehaviour
         fadeImg.alpha = 1.0f;
         yield return null;
 
-        SceneTransitionManager.Instance.LoadScene(sceneName);
+        SceneManager.LoadScene(sceneName);
     }
 
     private IEnumerator FadeOut()

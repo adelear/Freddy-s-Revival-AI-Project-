@@ -9,7 +9,7 @@ public class Cupcake : MonoBehaviour
     private Transform player;
     public List<Transform> targetPoints; 
     private int currentTarget = 0;
-    private float MinDistanceToRun = 15f;
+    private float MinDistanceToRun = 25f;
     private float MinDistanceToIdle = 5f; 
     NavMeshAgent agent;
     Animator anim;

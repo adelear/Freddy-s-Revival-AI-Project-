@@ -72,6 +72,7 @@ public class InteractableObject : MonoBehaviour, IInteractable
 
     public virtual void Update()
     {
+        if (GameManager.Instance.GetGameState() != GameManager.GameState.GAME) interactText.text = ""; 
         RaycastHit hit;
         if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, interactDistance))
         {

@@ -8,6 +8,7 @@ public class StunGun : MonoBehaviour
     private float fadeDuration = 0.5f; 
     float hitDistance = 7f;
     bool canStun = true; 
+
     void StunEnemy()
     {
         if (enemyController != null && !enemyController.isStunned && !enemyController.isDead && canStun) StartCoroutine(BeginStun());   
@@ -58,6 +59,7 @@ public class StunGun : MonoBehaviour
 
     private void Update()
     {
+        if (GameManager.Instance.GetGameState() != GameManager.GameState.GAME) return; 
         RaycastHit hit;
         if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, hitDistance))
         {
@@ -71,9 +73,6 @@ public class StunGun : MonoBehaviour
                 }
             }
         }
-        else
-        {
-            enemyController = null;
-        }
+        else enemyController = null;
     }
 }

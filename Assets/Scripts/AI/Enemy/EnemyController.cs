@@ -38,6 +38,12 @@ public class EnemyController : MonoBehaviour
     [Header("Jumpscare Components")]
     [SerializeField] Camera jumpscareCam;
     [SerializeField] GameObject jumpscareLight;
+    [SerializeField] AudioClip jumpScareNoise;
+    [SerializeField] AudioClip footStep;
+    [SerializeField] AudioClip playerFound;
+    [SerializeField] AudioClip chaseSound; 
+    private AudioSource audioSource; 
+
 
     public bool isIdle;
     public bool isStunned = false;
@@ -91,6 +97,7 @@ public class EnemyController : MonoBehaviour
         player = GameObject.FindGameObjectWithTag("Player").transform;
         playerController = player.gameObject.GetComponent<Player>(); 
         CurrentState = EnemyStates.Idle;
+        audioSource = GetComponent<AudioSource>(); 
         StartCoroutine(Idle()); 
         jumpscareLight.SetActive(false); 
 
@@ -148,7 +155,7 @@ public class EnemyController : MonoBehaviour
         anim.Play(jumpscareAnim);
         agent.velocity = Vector3.zero;
         Rigidbody playerRB = player.gameObject.GetComponent<Rigidbody>();
-        playerRB.velocity = Vector3.zero;
+        playerRB.velocity = Vector3.zero; 
     }
 
     private void JumpScare()
@@ -157,6 +164,7 @@ public class EnemyController : MonoBehaviour
         //agent.ResetPath(); 
         agent.enabled = false;
         jumpscareCam.depth = 1f;
+        AudioManager.Instance.PlayOneShot(jumpScareNoise, false); 
         jumpscareLight.SetActive(true);
     }
 
@@ -198,10 +206,14 @@ public class EnemyController : MonoBehaviour
     {
         agent.enabled = false;
         anim.Play(foundPlayerAnim);
+        audioSource.clip = playerFound; 
+        audioSource.Play(); 
 
         yield return new WaitForSeconds(3.0f);
 
         agent.enabled = true;
+        audioSource.clip = chaseSound;
+        audioSource.Play();
         CurrentState = EnemyStates.Chase; 
     }
 
@@ -254,6 +266,18 @@ public class EnemyController : MonoBehaviour
         anim.Play(deadAnim); 
     }
 
+    private void PlaySound()
+    {
+        if (audioSource != null && !audioSource.isPlaying)
+        {
+            audioSource.clip = footStep;
+            audioSource.pitch = Random.Range(0.8f, 1f);
+            //audioSource.volume = Random.Range(0.5f, 1f);
+            audioSource.Play();
+        }
+
+    }
+
     void Update()
     {
         AnimatorClipInfo[] curPlayingClips = anim.GetCurrentAnimatorClipInfo(0); 
@@ -267,6 +291,7 @@ public class EnemyController : MonoBehaviour
             if (DistanceToPlayer() <= attackRange && CurrentState == EnemyStates.Chase) CurrentState = EnemyStates.Jumpscare;
             if (DistanceToPlayer() > detectedRange && CurrentState == EnemyStates.Chase || playerController.isHidden && CurrentState == EnemyStates.Chase) CurrentState = EnemyStates.Idle;
             if (CurrentState == EnemyStates.Chase && DistanceToPlayer() > attackRange && agent.velocity == Vector3.zero) agent.SetDestination(player.position);
+
         }
     }
 }

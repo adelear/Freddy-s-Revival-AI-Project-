@@ -120,7 +120,8 @@ public class Player : MonoBehaviour
             HandleStamina();
             HandleCrouched();
         }
-        else Cursor.lockState = CursorLockMode.Confined; 
+        else Cursor.lockState = CursorLockMode.Confined;
         //Debug.Log($"{currentStamina} / {maxStamina}");
     }
 }
+
