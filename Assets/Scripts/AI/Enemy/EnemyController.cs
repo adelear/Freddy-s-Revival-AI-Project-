@@ -41,8 +41,12 @@ public class EnemyController : MonoBehaviour
     [SerializeField] AudioClip jumpScareNoise;
     [SerializeField] AudioClip footStep;
     [SerializeField] AudioClip playerFound;
-    [SerializeField] AudioClip chaseSound; 
-    private AudioSource audioSource; 
+    [SerializeField] AudioClip chaseSound;
+    [SerializeField] AudioClip shutDownSound;
+    [SerializeField] AudioClip glitchingSound; 
+
+    private AudioSource audioSource;
+    //private AudioSource audioSource2; 
 
 
     public bool isIdle;
@@ -98,6 +102,7 @@ public class EnemyController : MonoBehaviour
         playerController = player.gameObject.GetComponent<Player>(); 
         CurrentState = EnemyStates.Idle;
         audioSource = GetComponent<AudioSource>(); 
+        //audioSource2 = transform.Find("ExtraAudio").GetComponent<AudioSource>(); 
         StartCoroutine(Idle()); 
         jumpscareLight.SetActive(false); 
 
@@ -207,7 +212,8 @@ public class EnemyController : MonoBehaviour
         agent.enabled = false;
         anim.Play(foundPlayerAnim);
         audioSource.clip = playerFound; 
-        audioSource.Play(); 
+        audioSource.Play();
+        detectedRange = 30f; 
 
         yield return new WaitForSeconds(3.0f);
 
@@ -222,7 +228,7 @@ public class EnemyController : MonoBehaviour
         isIdle = true;
         agent.enabled = false;
         anim.Play(idleAnim);
-
+        detectedRange = 15f; 
         if (staysIdleUntilShock) 
         {
             while (!isStunned)
@@ -243,7 +249,9 @@ public class EnemyController : MonoBehaviour
         isStunned = true;
         currentStuns++; 
         agent.enabled = false;
-        anim.Play(stunAnim); 
+        anim.Play(stunAnim);
+        audioSource.clip = glitchingSound; 
+        audioSource.Play();  
         staysIdleUntilShock = false; 
 
         agent.velocity = Vector3.zero; 
@@ -263,19 +271,20 @@ public class EnemyController : MonoBehaviour
         if (enemyType == Enemy.Freddy) TaskManager.Instance.CompleteTask(TaskManager.TaskType.ImmobilizeFreddy); 
         isDead = true;
         agent.enabled = false;
-        anim.Play(deadAnim); 
+        anim.Play(deadAnim);
+        audioSource.clip = shutDownSound;
+        audioSource.Play();
     }
 
     private void PlaySound()
     {
-        if (audioSource != null && !audioSource.isPlaying)
+        if (!audioSource.isPlaying)
         {
             audioSource.clip = footStep;
             audioSource.pitch = Random.Range(0.8f, 1f);
             //audioSource.volume = Random.Range(0.5f, 1f);
             audioSource.Play();
         }
-
     }
 
     void Update()
@@ -291,7 +300,6 @@ public class EnemyController : MonoBehaviour
             if (DistanceToPlayer() <= attackRange && CurrentState == EnemyStates.Chase) CurrentState = EnemyStates.Jumpscare;
             if (DistanceToPlayer() > detectedRange && CurrentState == EnemyStates.Chase || playerController.isHidden && CurrentState == EnemyStates.Chase) CurrentState = EnemyStates.Idle;
             if (CurrentState == EnemyStates.Chase && DistanceToPlayer() > attackRange && agent.velocity == Vector3.zero) agent.SetDestination(player.position);
-
         }
     }
 }

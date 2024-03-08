@@ -41,7 +41,7 @@ public class CanvasManager : MonoBehaviour
 
     void Start()
     {
-        asm = GetComponent<AudioManager>();
+        asm = AudioManager.Instance;  
         if (startButton)
         {
             startButton.onClick.AddListener(StartGame);

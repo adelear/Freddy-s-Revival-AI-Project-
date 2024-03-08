@@ -4,18 +4,24 @@ using UnityEngine;
 public class StunGun : MonoBehaviour
 {
     [SerializeField] CanvasGroup fadeImg;
+    [SerializeField] AudioClip stunGunSound;
+    [SerializeField] AudioClip buttonClick; 
     EnemyController enemyController;
+    AudioSource audioSource;
     private float fadeDuration = 0.5f; 
     float hitDistance = 7f;
     bool canStun = true; 
 
     void StunEnemy()
     {
-        if (enemyController != null && !enemyController.isStunned && !enemyController.isDead && canStun) StartCoroutine(BeginStun());   
+        if (enemyController != null && !enemyController.isStunned && !enemyController.isDead && canStun) StartCoroutine(BeginStun());
     }
 
     IEnumerator BeginStun()
     {
+        audioSource = GetComponent<AudioSource>();
+        audioSource.volume = 1f;
+        AudioManager.Instance.PlayOneShot(stunGunSound, false);
         Debug.Log("Stunning Enemy");  
         canStun = false;
         StartCoroutine(FadeOut()); 
@@ -74,5 +80,13 @@ public class StunGun : MonoBehaviour
             }
         }
         else enemyController = null;
+        if (Input.GetMouseButtonDown(1))
+        {
+            audioSource = GetComponent<AudioSource>();
+            audioSource.volume = 0.2f;
+            audioSource.clip = buttonClick;
+            audioSource.Play(); 
+        } 
     }
+
 }
