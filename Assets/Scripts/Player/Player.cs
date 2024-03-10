@@ -25,7 +25,7 @@ public class Player : MonoBehaviour
     [Header("Crouch Components")]
     private bool isCrouched;
     public float regularHeight = 1.6f;
-    public float crouchedHeight = 0f;
+    public float crouchedHeight = 0.5f;
 
     public bool isHidden;  
 

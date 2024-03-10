@@ -103,7 +103,7 @@ public class FlashlightController : MonoBehaviour
             DetectObjectInFront();
 
             flashlight.innerSpotAngle = Mathf.Lerp(flashlight.innerSpotAngle, targetAngle, Time.deltaTime * intensityChangeSpeed);
-            flashlight.shadowAngle = Mathf.Lerp(flashlight.shadowAngle, targetAngle, Time.deltaTime * 1.0f);
+            //flashlight.shadowAngle = Mathf.Lerp(flashlight.shadowAngle, targetAngle, Time.deltaTime * 1.0f);
             flashlight.spotAngle = Mathf.Lerp(flashlight.spotAngle, targetAngle, Time.deltaTime * 0.5f);
             flashlight.range = Mathf.Lerp(flashlight.range, targetRange, Time.deltaTime * 1.0f);
 
