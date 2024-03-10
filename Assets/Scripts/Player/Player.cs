@@ -98,6 +98,7 @@ public class Player : MonoBehaviour
 
     private void HandleCrouched()
     {
+        if (isHidden) return; 
         if (!isCrouched && Input.GetKeyDown(KeyCode.LeftControl))
         {
             isCrouched = true;

@@ -218,8 +218,7 @@ public class EnemyController : MonoBehaviour
         yield return new WaitForSeconds(3.0f);
 
         agent.enabled = true;
-        audioSource.clip = chaseSound;
-        audioSource.Play();
+        AudioManager.Instance.PlayOneShot(chaseSound, false);
         CurrentState = EnemyStates.Chase; 
     }
 
